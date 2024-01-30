@@ -36,11 +36,9 @@ public class GestorArboles {
 		final int VISUALIZAR_ARBOLES = 3;
 		final int SALIR = 4;
 		ArrayList<Arbol> arboles = cargarArbolesBBDD();
-		
 		do {
 			Menus();
 			opcion = Integer.parseInt(scan.nextLine());
-			
 			switch (opcion) {
 			case INSERTAR:
 				insert(scan);
@@ -49,7 +47,7 @@ public class GestorArboles {
 				delete(arboles,scan);
 				break;
 			case MODIFICAR:
-				update(arboles);
+				update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
 //				arboles = cargarArbolesBBDD();
@@ -86,7 +84,6 @@ public class GestorArboles {
 
     private static void uploadBBDD(Arbol arbol) {
           try {
-        	  
               Class.forName("com.mysql.cj.jdbc.Driver");
               Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
               String crear_arbol = "INSERT INTO arboles (nombre_comun, nombre_cientifico,habitat,altura,origen) VALUES (?, ?, ?, ?, ?)";
@@ -107,12 +104,55 @@ public class GestorArboles {
           }
       }
 
-	public static void update(ArrayList<Arbol> arboles) {
-		
+	public static void update(ArrayList<Arbol> arboles,Scanner scan) {
+	    	int id = 0;
+	    	System.out.println("Introduzca el id del arbol a borrar: ");
+	    	id = Integer.parseInt(scan.nextLine());
+	    	for (int i = 0; i < arboles.size(); i++) {
+				if(arboles.get(id).getId() == id){
+					System.out.println("Ingrese el nombre comun del arbol: ");
+					arboles.get(id).setNombreComun(scan.nextLine());
+					System.out.println("Ingrese el nombre Cientifico del arbol: ");
+					arboles.get(id).setNombreCientefico(scan.nextLine());
+					System.out.println("Ingrese el Habitat del arbol: ");
+					arboles.get(id).setHabitat(scan.nextLine());
+					System.out.println("Ingrese la altura del arbol: ");
+					arboles.get(id).setAltura(Integer.parseInt(scan.nextLine()));
+					System.out.println("Ingrese el origen del arbol: ");
+					arboles.get(id).setOrigen(scan.nextLine());
+					updateArbolBBDD(id,arboles);
+				}
+			}
         }
     
 
-    public static void delete(ArrayList<Arbol> arboles, Scanner scan) {
+    private static void updateArbolBBDD(int id, ArrayList<Arbol> arboles) {
+    	String query = "UPDATE arboles SET nombre_comun = ?, nombre_cientifico = ?, habitat = ?, altura = ?, origen = ? WHERE tareas.id = ?";
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("No se ha podido cargar la clase SQl java");
+		}
+		try {
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
+			
+			PreparedStatement prst = conexion.prepareStatement(query);
+            prst.setString(1, arboles.get(id).getNombreComun());
+            prst.setString(2, arboles.get(id).getNombreCientefico());
+            prst.setString(3, arboles.get(id).getHabitat());
+            prst.setInt(4, arboles.get(id).getAltura());
+            prst.setString(5, arboles.get(id).getOrigen());
+            prst.executeUpdate();		
+			System.out.println("Arbol actualizado modificado");
+	
+		} catch (SQLException e) {
+			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
+			e.printStackTrace();
+		}
+	}
+
+	public static void delete(ArrayList<Arbol> arboles, Scanner scan) {
     	int id = 0;
     	
     	System.out.println("Introduzca el id del arbol a borrar: ");
@@ -120,7 +160,7 @@ public class GestorArboles {
     	for (int i = 0; i < arboles.size(); i++) {
 			if(arboles.get(i).getId() == id){
 				removeIDBBDD(id,arboles);
-				arboles.remove(i);
+				arboles.remove(id);
 			}
 		}
     }
