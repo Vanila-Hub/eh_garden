@@ -2,11 +2,20 @@ package v1_0;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*COLUMNAS DE LA BASE DE DATOS
+ * nombre_comun
+	nombre_cientifico
+	altura
+	habitat
+	origen
+ * 
+*/
 import com.mysql.cj.xdevapi.Statement;
 
 public class GestorArboles {
@@ -26,6 +35,7 @@ public class GestorArboles {
 		final int MODIFICAR = 2;
 		final int VISUALIZAR_ARBOLES = 3;
 		final int SALIR = 4;
+		ArrayList<Arbol> arboles = cargarArbolesBBDD();
 		
 		do {
 			Menus();
@@ -33,16 +43,19 @@ public class GestorArboles {
 			
 			switch (opcion) {
 			case INSERTAR:
-				
+				insert(scan);
 				break;
 			case ELIMINAR:
-				
+				delete(arboles,scan);
 				break;
 			case MODIFICAR:
-				
+				update(arboles);
 				break;
 			case VISUALIZAR_ARBOLES:
-				Visualizar();
+//				arboles = cargarArbolesBBDD();
+				for (Arbol arbol : arboles) {
+					System.out.println(arbol.toString() + "\n");
+				}
 				break;
 			case SALIR:
 				System.out.println("Saliendo....");
@@ -53,18 +66,91 @@ public class GestorArboles {
 		} while (opcion!=SALIR);
 	}
 	
-	public void insert(Arbol arbol) {
+	public static void insert(Scanner scan) {
+		int opcion = 0;
+		Arbol arbol = new Arbol();
+		
+		System.out.println("Ingrese el nombre comun del arbol: ");
+		arbol.setNombreComun(scan.nextLine());
+		System.out.println("Ingrese el nombre Cientifico del arbol: ");
+		arbol.setNombreCientefico(scan.nextLine());
+		System.out.println("Ingrese el Habitat del arbol: ");
+		arbol.setHabitat(scan.nextLine());
+		System.out.println("Ingrese la altura del arbol: ");
+		arbol.setAltura(Integer.parseInt(scan.nextLine()));
+		System.out.println("Ingrese el origen del arbol: ");
+		arbol.setOrigen(scan.nextLine());
+		uploadBBDD(arbol);
+		
     }
 
-    public void update(Arbol arbol) {
+    private static void uploadBBDD(Arbol arbol) {
+          try {
+        	  
+              Class.forName("com.mysql.cj.jdbc.Driver");
+              Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
+              String crear_arbol = "INSERT INTO arboles (nombre_comun, nombre_cientifico,habitat,altura,origen) VALUES (?, ?, ?, ?, ?)";
+              PreparedStatement prst = conexion.prepareStatement(crear_arbol);
+              prst.setString(1, arbol.getNombreComun());
+              prst.setString(2, arbol.getNombreCientefico());
+              prst.setString(3, arbol.getHabitat());
+              prst.setInt(4, arbol.getAltura());
+              prst.setString(5, arbol.getOrigen());
+              prst.executeUpdate();
+              
+              prst.close();
+              conexion.close();
+              System.out.println("Arbol creado!");
+          } catch (ClassNotFoundException | SQLException e) {
+              e.printStackTrace();
+              System.out.println("Error during database operation");
+          }
+      }
+
+	public static void update(ArrayList<Arbol> arboles) {
+		
         }
     
 
-    public void delete(int idArbol) {
-
+    public static void delete(ArrayList<Arbol> arboles, Scanner scan) {
+    	int id = 0;
+    	
+    	System.out.println("Introduzca el id del arbol a borrar: ");
+    	id = Integer.parseInt(scan.nextLine());
+    	for (int i = 0; i < arboles.size(); i++) {
+			if(arboles.get(i).getId() == id){
+				removeIDBBDD(id,arboles);
+				arboles.remove(i);
+			}
+		}
     }
     
-    private static ArrayList<Arbol> Visualizar() {
+    private static void removeIDBBDD(int id, ArrayList<Arbol> arboles) {
+    	String consulta = "DELETE FROM arboles WHERE ID = " + id;
+		
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("No se ha podido cargar la clase SQl java");
+		}
+		try {
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
+			java.sql.Statement st = conexion.createStatement();
+			boolean resultado = st.execute(consulta);
+			
+			if (resultado==false) {
+				System.out.println("1 arbol se ha visto afectada _ID: " + id);
+			}else {
+				System.out.println("Error al inentar eliminar al alumno con _id " + id);
+			}
+		} catch (SQLException e) {
+			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
+			e.printStackTrace();
+		}
+	}
+
+	private static ArrayList<Arbol> cargarArbolesBBDD() {
     	ArrayList<Arbol> arboles = new ArrayList<Arbol>();
     	
     	try {
@@ -86,13 +172,8 @@ public class GestorArboles {
 				arbol.setNombreComun(resultado.getString("nombre_cientifico"));
 				arbol.setAltura(resultado.getInt("altura"));
 				arbol.setHabitat(resultado.getString("habitat"));
-				arbol.setOrigen(resultado.getString("altura"));
 				arbol.setOrigen(resultado.getString("origen"));
 				arboles.add(arbol);
-			}
-			
-			for (Arbol arbol2 : arboles) {
-				System.out.println(arbol2.toString());
 			}
 		} catch (SQLException e) {
 			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
@@ -119,6 +200,6 @@ public class GestorArboles {
         System.out.println(MODIFICAR + ".Modificar información del árbol");
         System.out.println(VISUALIZAR_ARBOLES + ".Visualizar árboles");
         System.out.println(SALIR + ".Salir");
-        System.out.print("Ingrese su opción: ");
+        System.out.println("Ingrese su opción: ");
     }
 }
