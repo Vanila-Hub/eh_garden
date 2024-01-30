@@ -92,7 +92,6 @@ public class GestorArboles {
               prst.setInt(4, arbol.getAltura());
               prst.setString(5, arbol.getOrigen());
               prst.executeUpdate();
-              
               prst.close();
               conexion.close();
               System.out.println("Arbol creado!");
@@ -133,9 +132,9 @@ public class GestorArboles {
 			System.out.println("No se ha podido cargar la clase SQl java");
 		}
 		try {
-			Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
+	    Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
 			
-			PreparedStatement prst = conexion.prepareStatement(query);
+	    PreparedStatement prst = conexion.prepareStatement(query);
             prst.setString(1, arboles.get(id).getNombreComun());
             prst.setString(2, arboles.get(id).getNombreCientefico());
             prst.setString(3, arboles.get(id).getHabitat());
@@ -153,7 +152,6 @@ public class GestorArboles {
 
 	public static void delete(ArrayList<Arbol> arboles, Scanner scan) {
     	int id = 0;
-    	
     	System.out.println("Introduzca el id del arbol a borrar: ");
     	id = Integer.parseInt(scan.nextLine());
     	for (int i = 0; i < arboles.size(); i++) {
@@ -220,18 +218,12 @@ public class GestorArboles {
 		}
     	return arboles;
     }
-    
-    public void selectArbol(int idArbol) {
-
-    }
-    
     public static void Menus() {
 		final int INSERTAR = 0;
 		final int ELIMINAR = 1;
 		final int MODIFICAR = 2;
 		final int VISUALIZAR_ARBOLES = 3;
 		final int SALIR = 4;
-		
         // Menú principal
         System.out.println("Menú:");
         System.out.println(INSERTAR +".Insertar árbol");
