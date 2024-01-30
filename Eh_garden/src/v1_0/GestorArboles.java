@@ -100,7 +100,7 @@ public class GestorArboles {
               System.out.println("Arbol creado!");
           } catch (ClassNotFoundException | SQLException e) {
               e.printStackTrace();
-              System.out.println("Error during database operation");
+              System.out.println("No se ha podido cargar la Base de datos");
           }
       }
 
