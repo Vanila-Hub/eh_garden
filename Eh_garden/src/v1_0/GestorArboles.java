@@ -50,7 +50,6 @@ public class GestorArboles {
 				update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
-//				arboles = cargarArbolesBBDD();
 				for (Arbol arbol : arboles) {
 					System.out.println(arbol.toString() + "\n");
 				}
@@ -79,7 +78,6 @@ public class GestorArboles {
 		System.out.println("Ingrese el origen del arbol: ");
 		arbol.setOrigen(scan.nextLine());
 		uploadBBDD(arbol);
-		
     }
 
     private static void uploadBBDD(Arbol arbol) {
