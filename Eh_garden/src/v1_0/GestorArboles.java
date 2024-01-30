@@ -106,28 +106,28 @@ public class GestorArboles {
 
 	public static void update(ArrayList<Arbol> arboles,Scanner scan) {
 	    	int id = 0;
-	    	System.out.println("Introduzca el id del arbol a borrar: ");
+	    	System.out.println("Introduzca el id del arbol a modificar: ");
 	    	id = Integer.parseInt(scan.nextLine());
 	    	for (int i = 0; i < arboles.size(); i++) {
-				if(arboles.get(id).getId() == id){
+				if(arboles.get(i).getId() == id){
 					System.out.println("Ingrese el nombre comun del arbol: ");
-					arboles.get(id).setNombreComun(scan.nextLine());
+					arboles.get(i).setNombreComun(scan.nextLine());
 					System.out.println("Ingrese el nombre Cientifico del arbol: ");
-					arboles.get(id).setNombreCientefico(scan.nextLine());
+					arboles.get(i).setNombreCientefico(scan.nextLine());
 					System.out.println("Ingrese el Habitat del arbol: ");
-					arboles.get(id).setHabitat(scan.nextLine());
+					arboles.get(i).setHabitat(scan.nextLine());
 					System.out.println("Ingrese la altura del arbol: ");
-					arboles.get(id).setAltura(Integer.parseInt(scan.nextLine()));
+					arboles.get(i).setAltura(Integer.parseInt(scan.nextLine()));
 					System.out.println("Ingrese el origen del arbol: ");
-					arboles.get(id).setOrigen(scan.nextLine());
-					updateArbolBBDD(id,arboles);
+					arboles.get(i).setOrigen(scan.nextLine());
+					updateArbolBBDD(i,arboles);
 				}
 			}
         }
     
 
     private static void updateArbolBBDD(int id, ArrayList<Arbol> arboles) {
-    	String query = "UPDATE arboles SET nombre_comun = ?, nombre_cientifico = ?, habitat = ?, altura = ?, origen = ? WHERE tareas.id = ?";
+    	String query = "UPDATE arboles SET nombre_comun = ?, nombre_cientifico = ?, habitat = ?, altura = ?, origen = ? WHERE arboles.id = ?";
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -143,8 +143,9 @@ public class GestorArboles {
             prst.setString(3, arboles.get(id).getHabitat());
             prst.setInt(4, arboles.get(id).getAltura());
             prst.setString(5, arboles.get(id).getOrigen());
-            prst.executeUpdate();		
-			System.out.println("Arbol actualizado modificado");
+            prst.setInt(6, arboles.get(id).getId());
+            prst.executeUpdate();
+			System.out.println("Arbol actualizado");
 	
 		} catch (SQLException e) {
 			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
