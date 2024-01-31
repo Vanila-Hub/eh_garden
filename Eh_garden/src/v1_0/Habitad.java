@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 public class Habitad {
 	private int _idHabitad;
 	private String nombre;
-	
+	public Habitad() {
+
+	}
 	public int get_idHabitad() {
 		return _idHabitad;
 	}

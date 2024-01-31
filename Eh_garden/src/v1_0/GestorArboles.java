@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -19,10 +20,11 @@ import java.util.Scanner;
 import com.mysql.cj.xdevapi.Statement;
 
 public class GestorArboles {
-	final static String BBDD = "eh-garden";
+	final static String BBDD = "eh-garden2.0";
 	final static String Usuario = "root";
 	final static String contraseña = "";
 	final static String host = "localhost";
+	SimpleDateFormat formato_date = new SimpleDateFormat("dd/MM/yyyy");
 	public static void main(String[] args) {
 		run();
 	}
@@ -35,24 +37,25 @@ public class GestorArboles {
 		final int MODIFICAR = 2;
 		final int VISUALIZAR_ARBOLES = 3;
 		final int SALIR = 4;
-		ArrayList<Arbol> arboles = cargarArbolesBBDD();
+		//ArrayList<Arbol> arboles = cargarArbolesBBDD();
 		do {
 			Menus();
 			opcion = Integer.parseInt(scan.nextLine());
 			switch (opcion) {
 			case INSERTAR:
-				insert(scan);
+				//insert(scan);
 				break;
 			case ELIMINAR:
-				delete(arboles,scan);
+				//delete(arboles,scan);
 				break;
 			case MODIFICAR:
-				update(arboles,scan);
+				//update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
 //				arboles = cargarArbolesBBDD();
+				ArrayList<Arbol> arboles = visualizar();
 				for (Arbol arbol : arboles) {
-					System.out.println(arbol.toString() + "\n");
+					System.out.println(arbol.toString());
 				}
 				break;
 			case SALIR:
@@ -64,6 +67,39 @@ public class GestorArboles {
 		} while (opcion!=SALIR);
 	}
 	
+	private static ArrayList<Arbol> visualizar() {
+		ArrayList<Arbol> arboles = new ArrayList<Arbol>();
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			System.out.println("No se ha podido cargar la clase SQl java");
+		}
+		try {
+			Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
+			java.sql.Statement st = conexion.createStatement();
+			
+			ResultSet resultado = st.executeQuery("SELECT * FROM arboles ");
+			
+			while (resultado.next()) {
+				Arbol arbol = new Arbol();
+				arbol.setId(resultado.getInt("id"));
+				arbol.setNombreCientefico(resultado.getString("nombre_comun"));
+				arbol.setNombreComun(resultado.getString("nombre_cientifico"));
+				arbol.setAltura(resultado.getInt("altura"));
+				arbol.setHabitat_id(resultado.getInt("habitat"));
+				arbol.setOrigen(resultado.getString("origen"));
+				arbol.setSingular(resultado.getBoolean("singular"));
+				arbol.setFecha_encontrado(resultado.getDate("fecha_encontrado"));
+				arboles.add(arbol);
+			}
+		} catch (SQLException e) {
+			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
+			e.printStackTrace();
+		}
+		return arboles;
+	}
+
 	public static void insert(Scanner scan) {
 		int opcion = 0;
 		Arbol arbol = new Arbol();
