@@ -73,7 +73,6 @@ public class GestorArboles {
 		System.out.println("Ingrese el nombre Cientifico del arbol: ");
 		arbol.setNombreCientefico(scan.nextLine());
 		System.out.println("Ingrese el Habitat del arbol: ");
-		arbol.setHabitat(scan.nextLine());
 		System.out.println("Ingrese la altura del arbol: ");
 		arbol.setAltura(Integer.parseInt(scan.nextLine()));
 		System.out.println("Ingrese el origen del arbol: ");
@@ -90,7 +89,7 @@ public class GestorArboles {
               PreparedStatement prst = conexion.prepareStatement(crear_arbol);
               prst.setString(1, arbol.getNombreComun());
               prst.setString(2, arbol.getNombreCientefico());
-              prst.setString(3, arbol.getHabitat());
+              prst.setInt(3, arbol.getHabitat_id());
               prst.setInt(4, arbol.getAltura());
               prst.setString(5, arbol.getOrigen());
               prst.executeUpdate();
@@ -115,7 +114,7 @@ public class GestorArboles {
 					System.out.println("Ingrese el nombre Cientifico del arbol: ");
 					arboles.get(i).setNombreCientefico(scan.nextLine());
 					System.out.println("Ingrese el Habitat del arbol: ");
-					arboles.get(i).setHabitat(scan.nextLine());
+					//arboles.get(i).setHabitat_id(scan.nextLine());
 					System.out.println("Ingrese la altura del arbol: ");
 					arboles.get(i).setAltura(Integer.parseInt(scan.nextLine()));
 					System.out.println("Ingrese el origen del arbol: ");
@@ -140,7 +139,7 @@ public class GestorArboles {
 			PreparedStatement prst = conexion.prepareStatement(query);
             prst.setString(1, arboles.get(id).getNombreComun());
             prst.setString(2, arboles.get(id).getNombreCientefico());
-            prst.setString(3, arboles.get(id).getHabitat());
+            prst.setInt(3, arboles.get(id).getHabitat_id());
             prst.setInt(4, arboles.get(id).getAltura());
             prst.setString(5, arboles.get(id).getOrigen());
             prst.setInt(6, arboles.get(id).getId());
@@ -212,7 +211,7 @@ public class GestorArboles {
 				arbol.setNombreCientefico(resultado.getString("nombre_comun"));
 				arbol.setNombreComun(resultado.getString("nombre_cientifico"));
 				arbol.setAltura(resultado.getInt("altura"));
-				arbol.setHabitat(resultado.getString("habitat"));
+				arbol.setHabitat_id(resultado.getInt("habitat"));
 				arbol.setOrigen(resultado.getString("origen"));
 				arboles.add(arbol);
 			}

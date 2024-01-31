@@ -5,5 +5,18 @@ import java.text.SimpleDateFormat;
 public class Habitad {
 	private int _idHabitad;
 	private String nombre;
-	private boolean fecha_encontrado;
+	
+	public int get_idHabitad() {
+		return _idHabitad;
+	}
+	public void set_idHabitad(int _idHabitad) {
+		this._idHabitad = _idHabitad;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
 }
