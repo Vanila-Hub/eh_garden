@@ -125,7 +125,7 @@ public class GestorArboles {
 		for (int i = 0; i < habitads.size(); i++) {
 			if (opcion.equalsIgnoreCase(habitads.get(i).getNombre())) {
 				System.out.println(habitads.get(i).get_idHabitad());
-				arbol.set_idHabitad(habitads.get(i).get_idHabitad());
+				arbol.setIdHabitat(habitads.get(i).get_idHabitad());
 			}
 		}
 		
