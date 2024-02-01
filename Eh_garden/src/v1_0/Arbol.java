@@ -3,7 +3,7 @@ package v1_0;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Arbol {
+public class Arbol extends Habitad{
 	private int id;
 	private  String nombreComun;
 	private  String nombreCientefico;
@@ -92,7 +92,7 @@ public class Arbol {
 	@Override
 	public String toString() {
 		return "Arbol [id=" + id + ", nombreComun=" + nombreComun + ", nombreCientefico=" + nombreCientefico
-				+ ", habitat_id=" + habitat_id + ", altura=" + altura + ", origen=" + origen + ", singular=" + singular
+				+ ", habitat=" + getNombre() + ", altura=" + altura + ", origen=" + origen + ", singular=" + singular
 				+ ", fecha_encontrado=" + fecha_encontrado + "]";
 	}
 	

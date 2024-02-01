@@ -55,7 +55,7 @@ public class GestorArboles {
 //				arboles = cargarArbolesBBDD();
 				ArrayList<Arbol> arboles = visualizar();
 				for (Arbol arbol : arboles) {
-					System.out.println(arbol.toString());
+					System.out.println(arbol);
 				}
 				break;
 			case SALIR:
@@ -69,6 +69,7 @@ public class GestorArboles {
 	
 	private static ArrayList<Arbol> visualizar() {
 		ArrayList<Arbol> arboles = new ArrayList<Arbol>();
+		ArrayList<Habitad> habitads = new ArrayList<Habitad>();
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -79,19 +80,26 @@ public class GestorArboles {
 			Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
 			java.sql.Statement st = conexion.createStatement();
 			
-			ResultSet resultado = st.executeQuery("SELECT * FROM arboles ");
+			ResultSet resultado = st.executeQuery("SELECT * FROM arboles a inner join habitads h on a.habitat = h.id ");
 			
 			while (resultado.next()) {
 				Arbol arbol = new Arbol();
-				arbol.setId(resultado.getInt("id"));
-				arbol.setNombreCientefico(resultado.getString("nombre_comun"));
-				arbol.setNombreComun(resultado.getString("nombre_cientifico"));
-				arbol.setAltura(resultado.getInt("altura"));
-				arbol.setHabitat_id(resultado.getInt("habitat"));
-				arbol.setOrigen(resultado.getString("origen"));
-				arbol.setSingular(resultado.getBoolean("singular"));
-				arbol.setFecha_encontrado(resultado.getDate("fecha_encontrado"));
+				Habitad habitad = new Habitad();
+				
+				arbol.setId(resultado.getInt("a.id"));
+				arbol.setNombreCientefico(resultado.getString("a.nombre_comun"));
+				arbol.setNombreComun(resultado.getString("a.nombre_cientifico"));
+				arbol.setAltura(resultado.getInt("a.altura"));
+				arbol.setHabitat_id(resultado.getInt("a.habitat"));
+				arbol.setOrigen(resultado.getString("a.origen"));
+				arbol.setSingular(resultado.getBoolean("a.singular"));
+				arbol.setFecha_encontrado(resultado.getDate("a.fecha_encontrado"));
 				arboles.add(arbol);
+				
+				/*añadimos habitadas*/
+				habitad.set_idHabitad(resultado.getInt("h.id"));
+				habitad.setNombre(resultado.getString("h.id"));
+				habitads.add(habitad);
 			}
 		} catch (SQLException e) {
 			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
