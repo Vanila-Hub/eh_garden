@@ -40,7 +40,7 @@ public class GestorArboles {
 		final int MODIFICAR = 2;
 		final int VISUALIZAR_ARBOLES = 3;
 		final int SALIR = 4;
-		//ArrayList<Arbol> arboles = cargarArbolesBBDD();
+		ArrayList<Arbol> arboles = visualizar();
 		do {
 			Menus();
 			opcion = Integer.parseInt(scan.nextLine());
@@ -55,10 +55,9 @@ public class GestorArboles {
 				//update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
-//				ArrayList<Arbol> arboles = visualizar();
-//				for (Arbol arbol : arboles) {
-//					System.out.println(arbol);
-//				}
+			for (Arbol arbol : arboles) {
+					System.out.println(arbol);
+				}
 				break;
 			case SALIR:
 				System.out.println("Saliendo....");
@@ -96,9 +95,10 @@ public class GestorArboles {
 				arbol.setNombreComun(resultado.getString("a.nombre_cientifico"));
 				arbol.setAltura(resultado.getInt("a.altura"));
 				arbol.setHabitat(resultado.getString("h.nombre"));
+				arbol.set_idHabitad(resultado.getInt("h.id"));
 				arbol.setOrigen(resultado.getString("a.origen"));
 				arbol.setSingular(resultado.getBoolean("a.singular"));
-				arbol.setFecha_encontrado(resultado.getDate("a.fecha_encontrado"));
+				arbol.setFecha_encontrado(resultado.getString("a.fecha_encontrado"));
 				
 				arboles.add(arbol);
 				habitads.add(habitad);
@@ -111,7 +111,7 @@ public class GestorArboles {
 	}
 
 	public static void insert(Scanner scan) {
-		int opcion = 0;
+		String opcion = "";
 		Arbol arbol = new Arbol();
 		
 		System.out.println("Ingrese el nombre comun del arbol: ");
@@ -120,7 +120,15 @@ public class GestorArboles {
 		System.out.println("Ingrese el nombre Cientifico del arbol: ");
 		arbol.setNombreCientefico(scan.nextLine());
 		
-	    arbol.set_idHabitad(imprimirHabitads(scan));
+	    opcion = imprimirHabitads(scan);
+	     
+		for (int i = 0; i < habitads.size(); i++) {
+			if (opcion.equalsIgnoreCase(habitads.get(i).getNombre())) {
+				System.out.println(habitads.get(i).get_idHabitad());
+				arbol.set_idHabitad(habitads.get(i).get_idHabitad());
+			}
+		}
+		
 		System.out.println("Ingrese la altura del arbol: ");
 		arbol.setAltura(Integer.parseInt(scan.nextLine()));
 		
@@ -131,12 +139,12 @@ public class GestorArboles {
 		arbol.setSingular(Boolean.parseBoolean(scan.nextLine()));
 		
 		System.out.println("Ingrese la fecha en la que se encontro el arbol: ");
-		arbol.setFecha_encontrado(java.sql.Date.valueOf(scan.nextLine()));
+		arbol.setFecha_encontrado(scan.nextLine());
 		
 		uploadBBDD(arbol);
     }
 
-    private static int imprimirHabitads(Scanner scan) {
+    private static String imprimirHabitads(Scanner scan) {
     	String opcion = "";
     	
     	System.out.println("Elija una de las siguientes opciones de Habitads");
@@ -144,14 +152,8 @@ public class GestorArboles {
 		for (Habitad habitad : habitads) {
 			System.out.println(habitad);
 		}
-		
-		opcion = scan.nextLine(); 
-		for (int i = 0; i < habitads.size(); i++) {
-			if (opcion.equals(habitads.get(i).getNombre())) {
-				return habitads.get(i).get_idHabitad();
-			}
-		}
-		return 0;
+		opcion = scan.nextLine();
+		return opcion;
 	}
 
 	private static void uploadBBDD(Arbol arbol) {
@@ -163,11 +165,11 @@ public class GestorArboles {
               PreparedStatement prst = conexion.prepareStatement(crear_arbol);
               prst.setString(1, arbol.getNombreComun());
               prst.setString(2, arbol.getNombreCientefico());
-              prst.setString(3, arbol.getHabitat());
+              prst.setInt(3, arbol.getIdHabitat());
               prst.setInt(4, arbol.getAltura());
               prst.setString(5, arbol.getOrigen());
               prst.setBoolean(6, arbol.getSingular());
-              prst.setDate(7, (java.sql.Date) arbol.getFecha_encontrado());
+              prst.setString(7, arbol.getFecha_encontrado());
               prst.executeUpdate();
               
               prst.close();

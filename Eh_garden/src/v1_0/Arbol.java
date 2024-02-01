@@ -8,10 +8,11 @@ public class Arbol extends Habitad{
 	private  String nombreComun;
 	private  String nombreCientefico;
 	private  String habitat;
+	private  int idHabitat;
 	private  int altura;
 	private  String origen;
 	private Boolean singular;
-	private Date fecha_encontrado;
+	private String fecha_encontrado;
 	
 	public Arbol(int id,String nombreComun,String nombreCientefico,String habitat,int altura,String origen) {
 		this.id = id;
@@ -21,12 +22,20 @@ public class Arbol extends Habitad{
 		this.nombreComun = nombreComun;
 	}
 
-	public Date getFecha_encontrado() {
+	public int getIdHabitat() {
+		return idHabitat;
+	}
+
+	public void setIdHabitat(int idHabitat) {
+		this.idHabitat = idHabitat;
+	}
+
+	public String getFecha_encontrado() {
 		return fecha_encontrado;
 	}
 
-	public void setFecha_encontrado(Date fecha_encontrado) {
-		this.fecha_encontrado = fecha_encontrado;
+	public void setFecha_encontrado(String string) {
+		this.fecha_encontrado = string;
 	}
 
 	public int getId() {
