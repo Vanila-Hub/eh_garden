@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 /*COLUMNAS DE LA BASE DE DATOS
@@ -24,6 +25,8 @@ public class GestorArboles {
 	final static String Usuario = "root";
 	final static String contraseña = "";
 	final static String host = "localhost";
+	static ArrayList<Habitad> habitads = new ArrayList<Habitad>();
+	static ArrayList<Arbol> arboles = new ArrayList<Arbol>();
 	SimpleDateFormat formato_date = new SimpleDateFormat("dd/MM/yyyy");
 	public static void main(String[] args) {
 		run();
@@ -43,7 +46,7 @@ public class GestorArboles {
 			opcion = Integer.parseInt(scan.nextLine());
 			switch (opcion) {
 			case INSERTAR:
-				//insert(scan);
+				insert(scan);
 				break;
 			case ELIMINAR:
 				//delete(arboles,scan);
@@ -52,11 +55,10 @@ public class GestorArboles {
 				//update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
-//				arboles = cargarArbolesBBDD();
-				ArrayList<Arbol> arboles = visualizar();
-				for (Arbol arbol : arboles) {
-					System.out.println(arbol);
-				}
+//				ArrayList<Arbol> arboles = visualizar();
+//				for (Arbol arbol : arboles) {
+//					System.out.println(arbol);
+//				}
 				break;
 			case SALIR:
 				System.out.println("Saliendo....");
@@ -68,8 +70,7 @@ public class GestorArboles {
 	}
 	
 	private static ArrayList<Arbol> visualizar() {
-		ArrayList<Arbol> arboles = new ArrayList<Arbol>();
-		ArrayList<Habitad> habitads = new ArrayList<Habitad>();
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -115,28 +116,58 @@ public class GestorArboles {
 		
 		System.out.println("Ingrese el nombre comun del arbol: ");
 		arbol.setNombreComun(scan.nextLine());
+		
 		System.out.println("Ingrese el nombre Cientifico del arbol: ");
 		arbol.setNombreCientefico(scan.nextLine());
-		System.out.println("Ingrese el Habitat del arbol: ");
+		
+	    arbol.set_idHabitad(imprimirHabitads(scan));
 		System.out.println("Ingrese la altura del arbol: ");
 		arbol.setAltura(Integer.parseInt(scan.nextLine()));
+		
 		System.out.println("Ingrese el origen del arbol: ");
 		arbol.setOrigen(scan.nextLine());
-		uploadBBDD(arbol);
 		
+		System.out.println("Ingrese si el arbol es (1) singular o no (0): ");
+		arbol.setSingular(Boolean.parseBoolean(scan.nextLine()));
+		
+		System.out.println("Ingrese la fecha en la que se encontro el arbol: ");
+		arbol.setFecha_encontrado(java.sql.Date.valueOf(scan.nextLine()));
+		
+		uploadBBDD(arbol);
     }
 
-    private static void uploadBBDD(Arbol arbol) {
+    private static int imprimirHabitads(Scanner scan) {
+    	String opcion = "";
+    	
+    	System.out.println("Elija una de las siguientes opciones de Habitads");
+    	
+		for (Habitad habitad : habitads) {
+			System.out.println(habitad);
+		}
+		
+		opcion = scan.nextLine(); 
+		for (int i = 0; i < habitads.size(); i++) {
+			if (opcion.equals(habitads.get(i).getNombre())) {
+				return habitads.get(i).get_idHabitad();
+			}
+		}
+		return 0;
+	}
+
+	private static void uploadBBDD(Arbol arbol) {
           try {
               Class.forName("com.mysql.cj.jdbc.Driver");
               Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
-              String crear_arbol = "INSERT INTO arboles (nombre_comun, nombre_cientifico,habitat,altura,origen) VALUES (?, ?, ?, ?, ?)";
+              String crear_arbol = "INSERT INTO arboles (nombre_comun, nombre_cientifico, habitat, altura, origen, singular, fecha_encontrado) VALUES (?, ?, ?, ?, ?,? ,?)";
+     
               PreparedStatement prst = conexion.prepareStatement(crear_arbol);
               prst.setString(1, arbol.getNombreComun());
               prst.setString(2, arbol.getNombreCientefico());
               prst.setString(3, arbol.getHabitat());
               prst.setInt(4, arbol.getAltura());
               prst.setString(5, arbol.getOrigen());
+              prst.setBoolean(6, arbol.getSingular());
+              prst.setDate(7, (java.sql.Date) arbol.getFecha_encontrado());
               prst.executeUpdate();
               
               prst.close();
