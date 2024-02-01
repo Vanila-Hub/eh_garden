@@ -57,7 +57,6 @@ public class GestorArboles {
 				for (Arbol arbol : arboles) {
 					System.out.println(arbol);
 				}
-				
 				break;
 			case SALIR:
 				System.out.println("Saliendo....");
