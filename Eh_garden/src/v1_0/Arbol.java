@@ -7,16 +7,16 @@ public class Arbol extends Habitad{
 	private int id;
 	private  String nombreComun;
 	private  String nombreCientefico;
-	private  int habitat_id;
+	private  String habitat;
 	private  int altura;
 	private  String origen;
 	private Boolean singular;
 	private Date fecha_encontrado;
 	
-	public Arbol(int id,String nombreComun,String nombreCientefico,int habitat,int altura,String origen) {
+	public Arbol(int id,String nombreComun,String nombreCientefico,String habitat,int altura,String origen) {
 		this.id = id;
 		this.altura = altura;
-		this.habitat_id = habitat;
+		this.habitat = habitat;
 		this.nombreCientefico = nombreCientefico;
 		this.nombreComun = nombreComun;
 	}
@@ -53,12 +53,12 @@ public class Arbol extends Habitad{
 		this.nombreCientefico = nombreCientefico;
 	}
 
-	public int getHabitat_id() {
-		return habitat_id;
+	public String getHabitat() {
+		return habitat;
 	}
 
-	public void setHabitat_id(int habitat_id) {
-		this.habitat_id = habitat_id;
+	public void setHabitat(String habitad) {
+		this.habitat = habitad;
 	}
 
 	public int getAltura() {
@@ -92,7 +92,7 @@ public class Arbol extends Habitad{
 	@Override
 	public String toString() {
 		return "Arbol [id=" + id + ", nombreComun=" + nombreComun + ", nombreCientefico=" + nombreCientefico
-				+ ", habitat=" + getNombre() + ", altura=" + altura + ", origen=" + origen + ", singular=" + singular
+				+ ", habitat=" + habitat + ", altura=" + altura + ", origen=" + origen + ", singular=" + singular
 				+ ", fecha_encontrado=" + fecha_encontrado + "]";
 	}
 	

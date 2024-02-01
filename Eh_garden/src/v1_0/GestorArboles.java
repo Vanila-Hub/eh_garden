@@ -57,6 +57,7 @@ public class GestorArboles {
 				for (Arbol arbol : arboles) {
 					System.out.println(arbol);
 				}
+				
 				break;
 			case SALIR:
 				System.out.println("Saliendo....");
@@ -86,19 +87,20 @@ public class GestorArboles {
 				Arbol arbol = new Arbol();
 				Habitad habitad = new Habitad();
 				
+				/*añadimos habitadas*/
+				habitad.set_idHabitad(resultado.getInt("h.id"));
+				habitad.setNombre(resultado.getString("h.nombre"));
+				
 				arbol.setId(resultado.getInt("a.id"));
 				arbol.setNombreCientefico(resultado.getString("a.nombre_comun"));
 				arbol.setNombreComun(resultado.getString("a.nombre_cientifico"));
 				arbol.setAltura(resultado.getInt("a.altura"));
-				arbol.setHabitat_id(resultado.getInt("a.habitat"));
+				arbol.setHabitat(resultado.getString("h.nombre"));
 				arbol.setOrigen(resultado.getString("a.origen"));
 				arbol.setSingular(resultado.getBoolean("a.singular"));
 				arbol.setFecha_encontrado(resultado.getDate("a.fecha_encontrado"));
-				arboles.add(arbol);
 				
-				/*añadimos habitadas*/
-				habitad.set_idHabitad(resultado.getInt("h.id"));
-				habitad.setNombre(resultado.getString("h.id"));
+				arboles.add(arbol);
 				habitads.add(habitad);
 			}
 		} catch (SQLException e) {
@@ -133,7 +135,7 @@ public class GestorArboles {
               PreparedStatement prst = conexion.prepareStatement(crear_arbol);
               prst.setString(1, arbol.getNombreComun());
               prst.setString(2, arbol.getNombreCientefico());
-              prst.setInt(3, arbol.getHabitat_id());
+              prst.setString(3, arbol.getHabitat());
               prst.setInt(4, arbol.getAltura());
               prst.setString(5, arbol.getOrigen());
               prst.executeUpdate();
@@ -183,7 +185,7 @@ public class GestorArboles {
 			PreparedStatement prst = conexion.prepareStatement(query);
             prst.setString(1, arboles.get(id).getNombreComun());
             prst.setString(2, arboles.get(id).getNombreCientefico());
-            prst.setInt(3, arboles.get(id).getHabitat_id());
+            prst.setString(3, arboles.get(id).getHabitat());
             prst.setInt(4, arboles.get(id).getAltura());
             prst.setString(5, arboles.get(id).getOrigen());
             prst.setInt(6, arboles.get(id).getId());
@@ -255,7 +257,7 @@ public class GestorArboles {
 				arbol.setNombreCientefico(resultado.getString("nombre_comun"));
 				arbol.setNombreComun(resultado.getString("nombre_cientifico"));
 				arbol.setAltura(resultado.getInt("altura"));
-				arbol.setHabitat_id(resultado.getInt("habitat"));
+				arbol.setHabitat(resultado.getString("habitat"));
 				arbol.setOrigen(resultado.getString("origen"));
 				arboles.add(arbol);
 			}
