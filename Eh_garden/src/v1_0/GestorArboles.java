@@ -55,7 +55,7 @@ public class GestorArboles {
 				//update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
-				arboles = visualizar();
+				
 			for (Arbol arbol : arboles) {
 					System.out.println(arbol);
 				}
