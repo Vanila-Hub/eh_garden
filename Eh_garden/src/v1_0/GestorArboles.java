@@ -50,7 +50,7 @@ public class GestorArboles {
 				insert(scan);
 				break;
 			case ELIMINAR:
-				//delete(arboles,scan);
+				delete(arboles,scan);
 				break;
 			case MODIFICAR:
 				//update(arboles,scan);
@@ -79,6 +79,7 @@ public class GestorArboles {
 			e.printStackTrace();
 			System.out.println("No se ha podido cargar la clase SQl java");
 		}
+		habitads.clear();
 		try {
 			Connection conexion = DriverManager.getConnection("jdbc:mysql://" + host + "/" + BBDD,Usuario,contraseña);
 			java.sql.Statement st = conexion.createStatement();
@@ -241,7 +242,7 @@ public class GestorArboles {
     	for (int i = 0; i < arboles.size(); i++) {
 			if(arboles.get(i).getId() == id){
 				removeIDBBDD(id,arboles);
-				arboles.remove(id);
+				arboles.remove(i);
 			}
 		}
     }
