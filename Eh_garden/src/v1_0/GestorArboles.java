@@ -53,7 +53,7 @@ public class GestorArboles {
 				delete(arboles,scan);
 				break;
 			case MODIFICAR:
-				//update(arboles,scan);
+				update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
 				arboles.clear();
@@ -189,18 +189,38 @@ public class GestorArboles {
 	    	int id = 0;
 	    	System.out.println("Introduzca el id del arbol a modificar: ");
 	    	id = Integer.parseInt(scan.nextLine());
+	    	
 	    	for (int i = 0; i < arboles.size(); i++) {
 				if(arboles.get(i).getId() == id){
+					System.out.println("Datos Actuales: \n " + arboles.get(i).toString());
+
 					System.out.println("Ingrese el nombre comun del arbol: ");
 					arboles.get(i).setNombreComun(scan.nextLine());
+					
 					System.out.println("Ingrese el nombre Cientifico del arbol: ");
 					arboles.get(i).setNombreCientefico(scan.nextLine());
-					System.out.println("Ingrese el Habitat del arbol: ");
-					//arboles.get(i).setHabitat_id(scan.nextLine());
+					
+				    String opcion  = imprimirHabitads(scan);
+				     
+					for (int j = 0; j < habitads.size(); j++) {
+						if (opcion.equalsIgnoreCase(habitads.get(j).getNombre())) {
+							System.out.println(habitads.get(j).get_idHabitad());
+							arboles.get(i).setIdHabitat(habitads.get(j).get_idHabitad());
+						}
+					}
+					
 					System.out.println("Ingrese la altura del arbol: ");
 					arboles.get(i).setAltura(Integer.parseInt(scan.nextLine()));
+					
 					System.out.println("Ingrese el origen del arbol: ");
 					arboles.get(i).setOrigen(scan.nextLine());
+					
+					System.out.println("Ingrese si el arbol es (1) singular o no (0): ");
+					arboles.get(i).setSingular(Boolean.parseBoolean(scan.nextLine()));
+					
+					System.out.println("Ingrese la fecha en la que se encontro el arbol (yyyy/mm/dd): ");
+					arboles.get(i).setFecha_encontrado(scan.nextLine());
+					
 					updateArbolBBDD(i,arboles);
 				}
 			}
@@ -208,8 +228,9 @@ public class GestorArboles {
     
 
     private static void updateArbolBBDD(int id, ArrayList<Arbol> arboles) {
-    	String query = "UPDATE arboles SET nombre_comun = ?, nombre_cientifico = ?, habitat = ?, altura = ?, origen = ? WHERE arboles.id = ?";
-		try {
+    	String query = "UPDATE `arboles` SET `nombre_comun` = ?, `nombre_cientifico` = ?, `origen` = ?, `singular` = ?, `fecha_encontrado` = ? WHERE `arboles`.`id` = ?;";
+		
+    	try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -221,12 +242,15 @@ public class GestorArboles {
 			PreparedStatement prst = conexion.prepareStatement(query);
             prst.setString(1, arboles.get(id).getNombreComun());
             prst.setString(2, arboles.get(id).getNombreCientefico());
-            prst.setString(3, arboles.get(id).getHabitat());
-            prst.setInt(4, arboles.get(id).getAltura());
-            prst.setString(5, arboles.get(id).getOrigen());
+            prst.setString(3, arboles.get(id).getOrigen());
+            prst.setBoolean(4, arboles.get(id).getSingular());
+            prst.setString(5, arboles.get(id).getFecha_encontrado());
             prst.setInt(6, arboles.get(id).getId());
             prst.executeUpdate();
-			System.out.println("Arbol actualizado");
+            
+			arboles.clear();
+			arboles = visualizar();
+			System.out.println("Arbol actualizado _ID = " + arboles.get(id).toString());
 	
 		} catch (SQLException e) {
 			System.out.println("NO se ha podido establecer la conexion a la base de Datos");
