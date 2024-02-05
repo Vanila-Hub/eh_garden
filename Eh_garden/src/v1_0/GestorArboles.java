@@ -25,6 +25,11 @@ public class GestorArboles {
 	final static String Usuario = "root";
 	final static String contraseña = "";
 	final static String host = "localhost";
+	final static int INSERTAR = 4;
+	final static int ELIMINAR = 3;
+	final static int MODIFICAR = 2;
+	final static int VISUALIZAR_ARBOLES = 1;
+	final static int SALIR = 0;
 	static ArrayList<Habitad> habitads = new ArrayList<Habitad>();
 	static ArrayList<Arbol> arboles = new ArrayList<Arbol>();
 	SimpleDateFormat formato_date = new SimpleDateFormat("dd/MM/yyyy");
@@ -35,11 +40,7 @@ public class GestorArboles {
 	private static void run() {
 		Scanner scan = new Scanner(System.in);
 		int opcion = 0;
-		final int INSERTAR = 0;
-		final int ELIMINAR = 1;
-		final int MODIFICAR = 2;
-		final int VISUALIZAR_ARBOLES = 3;
-		final int SALIR = 4;
+
 		ArrayList<Arbol> arboles = visualizar();
 		do {
 			Menus();
@@ -55,7 +56,8 @@ public class GestorArboles {
 				//update(arboles,scan);
 				break;
 			case VISUALIZAR_ARBOLES:
-				
+				arboles.clear();
+				arboles = visualizar();
 			for (Arbol arbol : arboles) {
 					System.out.println(arbol);
 				}
@@ -139,7 +141,7 @@ public class GestorArboles {
 		System.out.println("Ingrese si el arbol es (1) singular o no (0): ");
 		arbol.setSingular(Boolean.parseBoolean(scan.nextLine()));
 		
-		System.out.println("Ingrese la fecha en la que se encontro el arbol: ");
+		System.out.println("Ingrese la fecha en la que se encontro el arbol (yyyy/mm/dd): ");
 		arbol.setFecha_encontrado(scan.nextLine());
 		
 		uploadBBDD(arbol);
@@ -306,12 +308,6 @@ public class GestorArboles {
     }
     
     public static void Menus() {
-		final int INSERTAR = 0;
-		final int ELIMINAR = 1;
-		final int MODIFICAR = 2;
-		final int VISUALIZAR_ARBOLES = 3;
-		final int SALIR = 4;
-		
         // Menú principal
         System.out.println("Menú:");
         System.out.println(INSERTAR +".Insertar árbol");
