@@ -32,7 +32,7 @@ public class GestorArboles {
 	final static int SALIR = 0;
 	static ArrayList<Habitad> habitads = new ArrayList<Habitad>();
 	static ArrayList<Arbol> arboles = new ArrayList<Arbol>();
-	SimpleDateFormat formato_date = new SimpleDateFormat("dd/MM/yyyy");
+	SimpleDateFormat formato_date = new SimpleDateFormat("yyyy/dd/mm");
 	public static void main(String[] args) {
 		run();
 	}
